@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
       }),
       prisma.post.count({ where: { isdelete: true } }),
     ]);
-
+    //sds
     const totalPages = Math.ceil(totalCount / pageSize);
 
     const pattern = {
