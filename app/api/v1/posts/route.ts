@@ -1,10 +1,28 @@
 import { type NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
+  const userToken = await getToken({
+    req: req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
   try {
+    const session = await getServerSession(authOptions);
+
+    console.log("session", session);
+
+    if (!userToken) {
+      const notPage = {
+        msg: "not token",
+      };
+
+      return Response.json(notPage);
+    }
     const searchParams = req.nextUrl.searchParams;
 
     if (!searchParams.get("page")) {
